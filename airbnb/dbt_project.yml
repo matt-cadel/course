@@ -32,17 +32,14 @@ on-run-start:
   - "CREATE TABLE IF NOT EXISTS {{ target.schema }}.audit_log ( model_name STRING, run_timestamp TIMESTAMP )"
 
 models:
-  airbnb:
-    +grants:
-      select: ["transform", "reporter"]
-    +post-hook:
-      - "INSERT INTO {{ target.schema }}.audit_log VALUES ('{{ this }}', CURRENT_TIMESTAMP)"
+  dbtlearn:
     +materialized: view
-    dim:
-      +materialized: table
-    src:
-      +materialized: ephemeral
+  dim:
+    +materialized: table
 
-data_tests:
-  +store_failures: true
-  +schema: _test_failures
+seeds:
+  airbnb:
+    seed_full_moon_dates:
+      +column_types:
+        full_moon_date: date
+      +quote_columns: false # Optional: helps avoid case-sensitivity issues in Snowflake

@@ -1,7 +1,13 @@
 {{
   config(
     materialized = 'incremental',
-    on_schema_change='fail'
+    on_schema_change='fail',
+    partition_by={
+      "field": "review_date",
+      "data_type": "date",
+      "granularity": "day"
+    },
+    cluster_by=['reviewer_name', 'listing_id']
     )
 }}
 
