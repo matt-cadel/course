@@ -1,5 +1,6 @@
 snapshots:
   - name: scd_raw_hosts
+    description: Snapshot of the raw hosts table to capture changes over time
     relation: source('airbnb', 'hosts')
     config:
       unique_key: id

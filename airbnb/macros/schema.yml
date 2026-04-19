@@ -1,0 +1,20 @@
+macros:
+  - name: empty_strings
+    description: "This reviews tables' columns for empty string values. It returns true if there are empty strings and false if there are not. This was created as a test, however it is incredibly useless in the real world, as a test success is if the table is empty"
+    arguments:
+      - name: model
+        type: string
+        description: "The model to check for empty string values."
+  - name: no_empty_strings
+    description: "This reviews tables' columns for empty string values. It returns true if there are no empty strings and false if there are."
+    arguments:
+      - name: model
+        type: string
+        description: "The model to check for empty string values."
+  - name: select_positive_values
+    description: "This checks that all values in a column are positive. It returns true if all values are positive and false if there are any negative values."
+    arguments:
+      - name: model
+        type: string
+        description: "The model to check for positive values."
+    

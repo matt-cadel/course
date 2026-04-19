@@ -34,12 +34,21 @@ on-run-start:
 models:
   dbtlearn:
     +materialized: view
-  dim:
-    +materialized: table
+  airbnb:
+    +grants: ["transform", "reporter"]
+    +post-hook: "INSERT INTO {{ target.schema }}.audit_log VALUES ('{{ this }}', CURRENT_TIMESTAMP)"
+    +materialized: view
+    dim:
+      +materialized: table
+    src:
+      +materialized: ephemeral
 
 seeds:
   airbnb:
     seed_full_moon_dates:
       +column_types:
         full_moon_date: date
-      +quote_columns: false # Optional: helps avoid case-sensitivity issues in Snowflake
+
+data_tests:
+  +store_failures: true
+  +schema: _test_failures
