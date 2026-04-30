@@ -1,0 +1,61 @@
+sources:
+  - name: airstats
+    schema: raw
+    tables:
+      - name: airports
+        identifier: airports
+        columns:
+          - name: id
+            tests:
+              - dbt_expectations.expect_column_values_to_be_unique
+              - dbt_expectations.expect_column_values_to_not_be_null
+          - name: continent
+            tests:
+              - dbt_expectations.expect_column_values_to_be_in_set:
+                  arguments:
+                    value_set: ['AN','AS','SA','OC','EU','NA','AF']
+                    quote_values: true
+          - name: latitude_deg
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  arguments:
+                    min_value: -90
+                    max_value: 90
+          - name: longitude_deg
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  arguments:
+                    min_value: -180
+                    max_value: 180
+
+      - name: airport_comments
+        identifier: airport_comments
+        columns:
+          - name: id
+            tests:
+              - dbt_expectations.expect_column_values_to_not_be_null
+              - relationships:
+                  arguments:
+                    to: source('airstats', 'airports')
+                    field: id
+
+      - name: runways
+        identifier: runways
+        columns:
+          - name: id
+            tests:
+              - dbt_expectations.expect_column_values_to_not_be_null
+          - name: length_ft
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  arguments:
+                    min_value: 0
+          - name: width_ft
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  arguments:
+                    min_value: 0
+              - relationships:
+                  arguments:
+                    to: source('airstats', 'airports')
+                    field: id

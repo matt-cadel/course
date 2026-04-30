@@ -1,0 +1,101 @@
+models:
+  - name: silver_airports
+    description: Silver layer table for the airports data
+    columns:
+      - name: airport_ident
+        description: Primary key for the airport
+        data_tests:
+          - unique
+          - not_null
+
+      - name: airport_type
+        description: The type of the airport
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['large_airport','heliport','seaplane_base','closed','small_airport','balloonport','medium_airport']
+
+      - name: airport_name 
+        description: Name of airport
+
+      - name: airport_lat 
+        description: Latitude of airport
+        
+      - name: airport_long
+        description: Longitude of airport
+     
+      - name: continent
+        description: Continent where the airport is located
+
+      - name: iso_country
+        description: ISO country code where the airport is located
+
+      - name: iso_region
+        description: ISO region code where the airport is located
+
+  - name: silver_runways
+    description: Cleansed table for the runways data
+    columns:
+      - name: runway_id
+        description: The id of the runway. This is the primary key.
+        tests:
+          - not_null
+          - unique
+
+      - name: airport_ident
+        description: The id of the airport. This is a foreign key referencing the airports table.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('silver_airports')
+                field: airport_ident
+                severity: warn
+      
+      - name: runway_length_ft
+        description: The length of the runway in feet
+
+      - name: runway_width_ft
+        description: The width of the runway in feet
+
+      - name: runway_surface
+        description: The surface of the runway
+
+      - name: runway_lighted
+        description: Indicates whether the runway is lighted
+
+      - name: runway_closed
+        description: Indicates whether the runway is closed
+
+  - name: silver_airport_comments
+    description: Cleansed table for the airport comments
+    columns:
+      - name: comment_id
+        description: The id of the comment. This is the primary key.
+        tests:
+          - not_null
+          - unique
+
+      - name: airport_ident
+        description: The id of the airport. This is a foreign key referencing the airports table.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              arguments:
+                to: ref('silver_airports')
+                field: airport_ident
+                severity: warn
+      
+      - name: member_nickname
+        description: This is the nickname of the member who made the comment
+
+      - name: comment_subject
+        description: '{{ doc("test_doc") }}'
+
+      - name: comment_body
+        description: The body of the comment
+
+      - name: loaded_at
+        description: The timestamp when the comment was loaded
